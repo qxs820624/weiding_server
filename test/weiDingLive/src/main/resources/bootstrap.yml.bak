@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: mslive
+    instance_id: ${spring.cloud.client.ipAddress}:${local.server.port:${java.io.tmpdir}}
+  groovy.template.check-template-location: false
+  jackson.serialization.indent_output: true
+  cloud.consul:
+      host: localhost
+      port: 8500
+      discovery:
+        healthCheckInterval: 15s
+        tags: urlprefix-/weiDing
+        instanceId: ${spring.application.name}
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: apps
+        profileSeparator: '::'
+
+logging.path: ../build/logs/
+logging.level.*: DEBUG
+
+
+server:
+  port: 8816
+  tomcat:
+    access-log-enabled: true
+    basedir: ${logging.path}
+    uri-encoding: UTF-8
+endpoints.shutdown:
+  enabled: true
+  sensitive: false
+
+management:
+  health:
+    solr:
+      enabled: false
+    db:
+      enabled: false
+    elasticsearch:
+      enabled: false
+    jms:
+      enabled: false
+    mail:
+      enabled: false
+    mongo:
+      enabled: false
+    rabbit:
+      enabled: false
+    redis:
+      enabled: false
