@@ -9,7 +9,7 @@ spring:
       port: 8500
       discovery:
         healthCheckInterval: 15s
-        tags: urlprefix-/live
+        tags: urlprefix-/weiDing
         instanceId: ${spring.application.name}
       config:
         enabled: true
@@ -22,7 +22,7 @@ logging.level.*: DEBUG
 
 
 server:
-  port: 8811
+  port: 8816
   tomcat:
     access-log-enabled: true
     basedir: ${logging.path}
