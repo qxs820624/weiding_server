@@ -1,6 +1,6 @@
 spring:
   application:
-    name: mslive
+    name: weiDingLive
     instance_id: ${spring.cloud.client.ipAddress}:${local.server.port:${java.io.tmpdir}}
   groovy.template.check-template-location: false
   jackson.serialization.indent_output: true
