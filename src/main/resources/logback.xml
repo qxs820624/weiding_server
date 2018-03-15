@@ -1,0 +1,209 @@
+<configuration scan="true" scanPeriod="120 seconds">
+    <jmxConfigurator/>
+    <property name="logging.path" value="${logging.path:-../build/logs}"/>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}.%method:%L){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39}.%method:%line  -%msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <appender name="DEBUG_LEVEL_REMAPPER" class="org.springframework.boot.logging.logback.LevelRemappingAppender">
+        <destinationLogger>org.springframework.boot</destinationLogger>
+    </appender>
+
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="ERROR"/>
+    <logger name="org.apache.catalina.util.LifecycleBase" level="ERROR"/>
+    <logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN"/>
+    <logger name="org.apache.sshd.common.util.SecurityUtils" level="WARN"/>
+    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN"/>
+    <logger name="org.crsh.plugin" level="WARN"/>
+    <logger name="org.crsh.ssh" level="WARN"/>
+    <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+    <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.endpoint.jmx" additivity="false">
+        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>
+    </logger>
+    <logger name="org.thymeleaf" additivity="false">
+        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>
+    </logger>
+
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+
+
+    //发送im消息（马甲消息和礼物打赏消息）的日志文件
+    <appender name="IM_MSG_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/im_msg_out.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/im_msg_out.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%L]=> %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="imMsg" level="INFO" additivity="false">
+        <appender-ref ref="IM_MSG_OUT"/>
+    </logger>
+
+    //回调接口日志
+    <appender name="CALL_BACK_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/callback.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/callback.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%L]=> %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="callBack" level="INFO" additivity="false">
+        <appender-ref ref="CALL_BACK_OUT"/>
+    </logger>
+
+    //回调接口日志
+    <appender name="TIMER_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/timer.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/timer.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%L]=> %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="timerLog" level="INFO" additivity="false">
+        <appender-ref ref="TIMER_LOG"/>
+    </logger>
+    <!--<logger name="org.apache.tomcat" level="DEBUG"/>-->
+    <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/request/request.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/request/request.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%L] => %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="requestLog" level="INFO" additivity="false">
+        <appender-ref ref="REQUEST_LOG"/>
+    </logger>
+
+    <!--视频采集上传的日志文件-->
+    <appender name="VIDEO_GATHER_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/videogather/videogather.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/videogather/videogather.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%L]=> %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="videoGatherLog" level="INFO" additivity="false">
+        <appender-ref ref="VIDEO_GATHER_LOG"/>
+    </logger>
+
+
+    <appender name="SPEED" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/speed-live.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/speed-live.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SPEED-ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/speed-access-live.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/speed-access-live.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SPEED-CAUSES" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/speed-causes-live.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/speed-causes-live.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--mongo-->
+<!--    <appender name="LIVE_ALARM_LOG" class="zs.live.common.MongoDBAppender">
+        <host>202.108.33.162</host>
+        <port>27017</port>
+        &lt;!&ndash;<username>lzw</username>&ndash;&gt;
+        &lt;!&ndash;<password>123</password>&ndash;&gt;
+        <dbName>live</dbName>
+        <collectionName>exception</collectionName>
+    </appender>
+    <logger name="httpQcloudLog" level="ERROR" additivity="false">
+        <appender-ref ref="LIVE_ALARM_LOG" />
+    </logger>
+    <logger name="liveRedisLog" level="ERROR" additivity="false">
+        <appender-ref ref="LIVE_ALARM_LOG" />
+    </logger>
+    <logger name="apiExceptionLog" level="ERROR" additivity="false">
+        <appender-ref ref="LIVE_ALARM_LOG" />
+    </logger>-->
+    <logger name="kafka.producer.SyncProducer" level="WARN" additivity="false">
+    </logger>
+    <logger name="kafka.producer.Producer" level="WARN" additivity="false">
+    </logger>
+    <logger name="kafka.producer.ProducerPool" level="WARN" additivity="false">
+    </logger>
+    <logger name="kafka.utils.VerifiableProperties" level="WARN" additivity="false">
+    </logger>
+    <logger name="kafka.client.ClientUtils" level="WARN" additivity="false">
+    </logger>
+    <logger name="speed-access" level="info" additivity="false">
+        <appender-ref ref="SPEED-ACCESS"/>
+    </logger>
+    <logger name="speed-causes" level="info" additivity="false">
+        <appender-ref ref="SPEED-CAUSES"/>
+    </logger>
+</configuration>
