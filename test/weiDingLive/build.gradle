@@ -52,13 +52,7 @@ targetCompatibility = 1.8
 buildDir = new File(rootProject.buildDir, project.name)
 
 repositories {
-    maven {
-        url "http://61.135.210.239:8892/repository/maven-public/"
-    }
-    maven { url 'http://103.29.135.114:2015/repo/jcenter/' }
-    maven { url 'http://103.29.135.114:2015/repo/mvn/maven2/' }
-    maven { url 'http://103.29.135.114:2015/repo/spring/release/' }
-    maven { url 'http://103.29.135.114:2015/repo/jboss/maven2/' }
+    
     maven { url 'http://repo.spring.io/release/' }
     jcenter()
     mavenCentral()
