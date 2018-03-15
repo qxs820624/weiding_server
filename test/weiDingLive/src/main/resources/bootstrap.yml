@@ -9,12 +9,12 @@ spring:
       port: 8500
       discovery:
         healthCheckInterval: 15s
-        tags: urlprefix-/weiDing
+        tags: urlprefix-/weiDingLive
         instanceId: ${spring.application.name}
       config:
         enabled: true
         prefix: configuration
-        defaultContext: apps
+        defaultContext: weiDing
         profileSeparator: '::'
 
 logging.path: ../build/logs/
