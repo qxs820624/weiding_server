@@ -1,0 +1,11 @@
+1.项目中命名统一使用驼峰式命名
+2.数据库字段命名统一使用小写加下滑线（mongo,mysql 都是）
+3.与客户端协议返回格式统一使用驼峰式命名
+4.与客户端协议统一返回json 字段统一用string类型
+5.userId统一用long类型，数据库用bigInt类型
+6.groovy 接口命名 统一用小写加.连接符
+7.获取appId 时必须用 Strings.getAppId(params) 这个方法获取
+8.公共方法都在util中,定时任务都在task中
+9.接口命名，要基本能反应该接口的功能含义，如果有动词把动词放到最后，如： live.add.groovy等
+10. 任何日志 都加上 liveId,roomId,foreshowId
+11.项目中用到的状态值，类型不要直接用数字，要在LiveCommon.groovy中定义一个常量
