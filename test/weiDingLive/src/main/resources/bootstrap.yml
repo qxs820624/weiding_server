@@ -14,7 +14,7 @@ spring:
       config:
         enabled: true
         prefix: configuration
-        defaultContext: weiDing
+        defaultContext: weiding
         profileSeparator: '::'
 
 logging.path: ../build/logs/
