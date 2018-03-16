@@ -5,7 +5,7 @@ import groovyx.net.http.RESTClient
 class Consul {
     static put(String consulServer, String folder, Map params) {
         def restClient = new RESTClient(
-            "http://${consulServer ?: '61.135.210.239:8500'}/v1/kv/",
+            "http://${consulServer ?: ':8500'}/v1/kv/",
             ContentType.URLENC)
         params?.each { k, v ->
             println "$folder/$k = $v"
@@ -23,7 +23,7 @@ Consul.put(null, 'configuration/apps', [
     'pre.address':'lvpre.souyue.mobi',
     'online.address':'lv.souyue.mobi',
 
-    'live.redis.cluster':'103.7.221.120:6380',
+    'live.redis.cluster':'47.92.80.247:6379',
 
     'db.mysql.live.url':'jdbc:mysql://61.135.210.177:3306/live?characterEncoding=UTF-8&autoReconnect=true',
     'db.mysql.live.user':'yuer',
