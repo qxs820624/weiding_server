@@ -5,8 +5,7 @@ import groovyx.net.http.RESTClient
 class Consul {
     static put(String consulServer, String folder, Map params) {
         def restClient = new RESTClient(
-            "http://${consulServer ?: ':8500'}/v1/kv/",
-            ContentType.URLENC)
+            "http://${consulServer ?: '47.92.80.247:8500'}/v1/kv/",            ContentType.URLENC)
         params?.each { k, v ->
             println "$folder/$k = $v"
             restClient.put(
@@ -17,7 +16,7 @@ class Consul {
 }
 
 
-Consul.put(null, 'configuration/apps', [
+Consul.put(null, 'configuration/weiDing', [
     'live.env':'test',
     'test.address':'lvtest.souyue.mobi',
     'pre.address':'lvpre.souyue.mobi',
@@ -25,13 +24,13 @@ Consul.put(null, 'configuration/apps', [
 
     'live.redis.cluster':'47.92.80.247:6379',
 
-    'db.mysql.live.url':'jdbc:mysql://61.135.210.177:3306/live?characterEncoding=UTF-8&autoReconnect=true',
-    'db.mysql.live.user':'yuer',
-    'db.mysql.live.password':'SoU2)!5yUe',
+    'db.mysql.live.url':'jdbc:mysql://47.92.80.247:3675/weiding?characterEncoding=UTF-8&autoReconnect=true',
+    'db.mysql.live.user':'weiding',
+    'db.mysql.live.password':'YSU%$S7js6%A8dks',
 
-    'db.mysql.live.slave.url':'jdbc:mysql://61.135.210.177:3306/live?characterEncoding=UTF-8&autoReconnect=true',
-    'db.mysql.live.slave.user':'yuer',
-    'db.mysql.live.slave.password':'SoU2)!5yUe',
+    'db.mysql.live.slave.url':'jdbc:mysql://47.92.80.247:3675/weiding?characterEncoding=UTF-8&autoReconnect=true',
+    'db.mysql.live.slave.user':'weiding',
+    'db.mysql.live.slave.password':'YSU%$S7js6%A8dks',
 
     'live.mongo.servers':'202.108.33.162:27017',
     'live.mongo.db':'live',
@@ -71,7 +70,7 @@ Consul.put(null, 'configuration/apps', [
 
     'db.mysql.old.live.slave.url':'jdbc:mysql://103.29.134.138:3306/syadmin?characterEncoding=UTF-8&autoReconnect=true',
     'db.mysql.old.live.slave.user':'sycmsdb',
-    'db.mysql.old.live.slave.password':'SY#CM$s2015',
+    'db.mysql.old.live.slave.password':'SY#CM $s2015',
 
     'db.mysql.souyue.live.slave.url':'jdbc:mysql://103.7.220.201:3306/souyue01?characterEncoding=UTF-8&autoReconnect=true',
     'db.mysql.souyue.live.slave.user':'sy_user',
