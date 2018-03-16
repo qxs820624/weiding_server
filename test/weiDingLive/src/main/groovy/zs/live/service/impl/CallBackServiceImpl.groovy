@@ -48,12 +48,12 @@ class CallBackServiceImpl implements CallBackService{
     @Autowired
     VestUserService vestUserService
 
-    @Value('${live.secretId}')
-    String secretId
-    @Value('${live.secretKey}')
-    String secretKey
-    @Value('${live.video.uploadMode}')
-    String uploadMode //push：推送至云 pull：云端拉取
+//    @Value('${live.secretId}')
+//    String secretId
+//    @Value('${live.secretKey}')
+//    String secretKey
+//    @Value('${live.video.uploadMode}')
+//    String uploadMode //push：推送至云 pull：云端拉取
     /**
      *  //json
      /**
