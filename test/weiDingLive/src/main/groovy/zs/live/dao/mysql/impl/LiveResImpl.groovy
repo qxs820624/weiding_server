@@ -55,7 +55,7 @@ class LiveResImpl implements LiveRes {
         }
         sql = sql + " order by fans_id desc limit ?";
         queryParam << pageSize;
-        dataBases.msqlLiveSlave.eachRow(sql, queryParam) {
+        dataBases.msqlLive.eachRow(sql, queryParam) {
             list << [id: it.fans_id, userId: it.fans_user_id, followType: it.follow_type];
         }
         return list;
@@ -76,7 +76,7 @@ class LiveResImpl implements LiveRes {
             sql = sql + " and fans_id < ? ";
             queryParam << lastId;
         }
-        def ret = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+        def ret = dataBases.msqlLive.firstRow(sql, queryParam);
         if (!ret) {
             return 0;
         } else {
@@ -100,7 +100,7 @@ class LiveResImpl implements LiveRes {
         }
         sql = sql + " order by fans_id desc limit ?";
         queryParam << pageSize;
-        dataBases.msqlLiveSlave.eachRow(sql, queryParam) {
+        dataBases.msqlLive.eachRow(sql, queryParam) {
             list << [id: it.fans_id, userId: it.user_id, followType: it.follow_type];
         }
         return list;
@@ -120,7 +120,7 @@ class LiveResImpl implements LiveRes {
             sql = sql + " and fans_id < ? ";
             queryParam << lastId;
         }
-        def ret = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+        def ret = dataBases.msqlLive.firstRow(sql, queryParam);
         if (!ret) {
             return 0;
         } else {
@@ -138,7 +138,7 @@ class LiveResImpl implements LiveRes {
         String sql = "select follow_type from live_user_fans where user_id =? and fans_user_id =? and fans_type=? ";
         def queryParam = [fromUserId, toUserId, fansType];
         log.info("addFollow sql queryParam=>{}",queryParam)
-        def result = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+        def result = dataBases.msqlLive.firstRow(sql, queryParam);
 
         if (!result) {
             //客户端重复调用会重复插入，会发生异常，因为数据库有惟一索引
@@ -178,7 +178,7 @@ class LiveResImpl implements LiveRes {
     def getFollowInfoByUserId(long fromUserId, long toUserId, int fansType, String appId) {
         def result = null
         try {
-            result = dataBases.msqlLiveSlave.firstRow("SELECT * from live_user_fans where user_id =? and fans_user_id =? and fans_type=? ",[toUserId, fromUserId,1])
+            result = dataBases.msqlLive.firstRow("SELECT * from live_user_fans where user_id =? and fans_user_id =? and fans_type=? ",[toUserId, fromUserId,1])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -192,7 +192,7 @@ class LiveResImpl implements LiveRes {
         //return 2: 取消关注成功，由互相关注变成被关注
         String sql = "select follow_type from live_user_fans where user_id =? and fans_user_id =? and fans_type=?";
         def queryParam = [toUserId, fromUserId, fansType];
-        def result = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+        def result = dataBases.msqlLive.firstRow(sql, queryParam);
 
         if (!result) {
             //本来就没有关注，取消操作无意义
@@ -218,7 +218,7 @@ class LiveResImpl implements LiveRes {
     public def isFollow(long fromUserId, long toUserId, int fansType,String appId) {
         String sql = "select follow_type from live_user_fans where user_id =? and fans_user_id =? and fans_type=? ";
         def queryParam = [toUserId, fromUserId,fansType];
-        def result = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+        def result = dataBases.msqlLive.firstRow(sql, queryParam);
         if (!result) {
             //行不存在，一定是没有关注
             return 0;
@@ -235,7 +235,7 @@ class LiveResImpl implements LiveRes {
         def rowResult
         try {
             String sql = "select * from live_record where live_id=? "
-            rowResult= dataBases.msqlLiveSlave.firstRow(sql, [liveId])
+            rowResult= dataBases.msqlLive.firstRow(sql, [liveId])
             log.info("rowResul====>"+rowResult)
         }catch (Exception e){
             e.printStackTrace()
@@ -248,7 +248,7 @@ class LiveResImpl implements LiveRes {
         def live
         try {
             String sql = "SELECT * FROM live_record WHERE foreshow_id=? "
-            live= dataBases.msqlLiveSlave.firstRow(sql, [foreshowId])
+            live= dataBases.msqlLive.firstRow(sql, [foreshowId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -260,7 +260,7 @@ class LiveResImpl implements LiveRes {
         def result
         String sql = "SELECT value FROM live_config WHERE  config_id=?"
         try {
-            dataBases.msqlLiveSlave.eachRow(sql,[configId]){ row ->
+            dataBases.msqlLive.eachRow(sql,[configId]){ row ->
                 result = Strings.parseJson(row.value)
             }
         }catch (Exception e){
@@ -273,7 +273,7 @@ class LiveResImpl implements LiveRes {
     def addLiveConfig(Map map) {
         String sql = "INSERT INTO live_config (name,value,description,pid,app_id) VALUES (?,?,?,?,?)"
         try {
-            dataBases.msqlLiveSlave.executeInsert(sql,[map.name,Strings.toJson(map.value),map.description,map.pid as int,map.appId])
+            dataBases.msqlLive.executeInsert(sql,[map.name,Strings.toJson(map.value),map.description,map.pid as int,map.appId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -284,7 +284,7 @@ class LiveResImpl implements LiveRes {
         def result
         String sql = "SELECT value FROM live_config WHERE name = ? and app_id=? "
         try {
-            def config= dataBases.msqlLiveSlave.firstRow(sql, ["playbackVedioConfig",appId])
+            def config= dataBases.msqlLive.firstRow(sql, ["playbackVedioConfig",appId])
             if(config){
                 result = Strings.parseJson(config.value)
             }
@@ -299,7 +299,7 @@ class LiveResImpl implements LiveRes {
         def result = []
         String sql = "SELECT * FROM live_foreshow WHERE app_id = ? AND (foreshow_status =0 or foreshow_status =1) AND foreshow_type = 1 ORDER BY sort_num DESC,begin_time ASC"
         try {
-            result = dataBases.msqlLiveSlave.rows(sql,[map.appId])
+            result = dataBases.msqlLive.rows(sql,[map.appId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -389,7 +389,7 @@ class LiveResImpl implements LiveRes {
         try {
             println "getNotStartedLiveForeshowList SQL >> ${sql.toString()}"
             println "getNotStartedLiveForeshowList PARAMS >> ${queryParam}"
-            result = dataBases.msqlLiveSlave.rows(sql.toString(),queryParam)
+            result = dataBases.msqlLive.rows(sql.toString(),queryParam)
         }catch (Exception e){
            log.error("getNotStartedLiveForeshowList ",e);
         }
@@ -414,7 +414,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live list sql =====>{}", sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -455,7 +455,7 @@ class LiveResImpl implements LiveRes {
             sql.append(" order by  live_id desc limit ? ")
             queryParam << map.psize;
             log.info("findFaceLiveList sql:{},map:{}",sql.toString(),queryParam);
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString(),queryParam);
+            liveList = dataBases.msqlLive.rows(sql.toString(),queryParam);
         }catch (Exception e){
            log.info("findFaceLiveList map:{}",map,e);
         }
@@ -484,7 +484,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live  foreshow list sql=======>{}", sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -497,7 +497,7 @@ class LiveResImpl implements LiveRes {
         sql.append(" AND foreshow_id = "+foreshowId)
         try {
             log.info("live foreshow by foreshowId sql=======>{}", sql.toString())
-            return dataBases.msqlLiveSlave.firstRow(sql.toString())
+            return dataBases.msqlLive.firstRow(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -523,7 +523,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live record list by foreshowId sql=======>{}".toString(), sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -554,7 +554,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live record my sql=======>{}", sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -591,7 +591,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live record my sql=======>{}", sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -621,7 +621,7 @@ class LiveResImpl implements LiveRes {
         List liveList = []
         try {
             log.info("live record my sql=======>{}", sql.toString())
-            liveList = dataBases.msqlLiveSlave.rows(sql.toString())
+            liveList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -674,7 +674,7 @@ class LiveResImpl implements LiveRes {
             //先查询是否存在
             String sql = "select appoint_id from live_appointment where foreshow_id =? and  user_id=? ";
             def queryParam =  [foreshowId, userId];
-            def result = dataBases.msqlLiveSlave.firstRow(sql, queryParam);
+            def result = dataBases.msqlLive.firstRow(sql, queryParam);
             //插入预约记录
             if(!result){
                 dataBases.msqlLive.executeInsert("insert into live_appointment(foreshow_id,user_id,create_time,app_id)  values(?,?,?,?)",
@@ -705,7 +705,7 @@ class LiveResImpl implements LiveRes {
         def rowResult
         try {
             String sql = "select * from live_record_log where live_id=? "
-            rowResult= dataBases.msqlLiveSlave.firstRow(sql, [liveId])
+            rowResult= dataBases.msqlLive.firstRow(sql, [liveId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -717,7 +717,7 @@ class LiveResImpl implements LiveRes {
         def rowResult
         try {
             String sql = "select * from live_record_log where foreshow_id=? "
-            rowResult= dataBases.msqlLiveSlave.firstRow(sql, [foreshowId])
+            rowResult= dataBases.msqlLive.firstRow(sql, [foreshowId])
 
         }catch (Exception e){
             e.printStackTrace()
@@ -789,7 +789,7 @@ class LiveResImpl implements LiveRes {
         def rowResult
         try {
             String sql = "SELECT * FROM live_appointment WHERE user_id=? AND foreshow_id=? ORDER BY create_time DESC"
-            rowResult= dataBases.msqlLiveSlave.firstRow(sql, [userId,foreshowId])
+            rowResult= dataBases.msqlLive.firstRow(sql, [userId,foreshowId])
             if(rowResult)
                 return 1
         }catch (Exception e){
@@ -805,7 +805,7 @@ class LiveResImpl implements LiveRes {
             String sql = "SELECT foreshow_id FROM live_appointment WHERE user_id=? "
             def params = [userId]
 
-            def rows= dataBases.msqlLiveSlave.rows(sql, params)
+            def rows= dataBases.msqlLive.rows(sql, params)
             resultList.addAll(rows.foreshow_id)
         }catch (Exception e){
             e.printStackTrace()
@@ -822,7 +822,7 @@ class LiveResImpl implements LiveRes {
         }
         sql.append(" ORDER BY appoint_id DESC LIMIT "+psize)
         try {
-            dataBases.msqlLiveSlave.eachRow(sql.toString(), [foreshowId], {row ->
+            dataBases.msqlLive.eachRow(sql.toString(), [foreshowId], {row ->
                 list << [id: row.appoint_id, userId: row.user_id]
             })
         }catch (Exception e){
@@ -835,7 +835,7 @@ class LiveResImpl implements LiveRes {
     def findLiveRecordByForeId(long foreshowId,String appId) {
         String sql = "select * from live_record where foreshow_id = ?"
         try {
-            return dataBases.msqlLiveSlave.firstRow(sql,[foreshowId])
+            return dataBases.msqlLive.firstRow(sql,[foreshowId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -873,7 +873,7 @@ class LiveResImpl implements LiveRes {
         def resultList = []
         try {
             //为了方便计算，将马甲按顺序放到10个redis的key中，目前取28200.库中有17条记录没有用
-            dataBases.msqlLiveSlave.eachRow("SELECT user_id,nickname,user_image FROM live_vest_users order by pwd limit 28200",{row ->
+            dataBases.msqlLive.eachRow("SELECT user_id,nickname,user_image FROM live_vest_users order by pwd limit 28200",{row ->
                 //由于数据库里的用户头像太大，客户端展示有问题，所以需要对头像做以下处理
                 String userImage = ImageUtils.getSmallImg(row.user_image ? row.user_image as String : "")
                 resultList << [
@@ -891,7 +891,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def findVestCountConfigInfo(long liveId,String name,String appId) {
         try {
-            return dataBases.msqlLiveSlave.firstRow("SELECT value FROM live_config WHERE app_id=? AND name = ? AND live_id=? ", [appId,name,liveId])
+            return dataBases.msqlLive.firstRow("SELECT value FROM live_config WHERE app_id=? AND name = ? AND live_id=? ", [appId,name,liveId])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -901,7 +901,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def findVestCountGlobalConfigInfo(String name,String appId) {
         try {
-            return dataBases.msqlLiveSlave.firstRow("SELECT value FROM live_config WHERE app_id=? AND name = ? ", [appId,name])
+            return dataBases.msqlLive.firstRow("SELECT value FROM live_config WHERE app_id=? AND name = ? ", [appId,name])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -912,9 +912,9 @@ class LiveResImpl implements LiveRes {
     def findBackVedioAddress() {
         def resultList = []
         try {
-            dataBases.msqlLiveSlave.eachRow("SELECT video_address  FROM live_record_log where video_address is not null and create_time > '2016-12-00' and create_time < '2016-12-25'",{row ->
+            dataBases.msqlLive.eachRow("SELECT video_address  FROM live_record_log where video_address is not null and create_time > '2016-12-00' and create_time < '2016-12-25'",{row ->
            //线上导出
-           ///dataBases.msqlLiveSlave.eachRow("SELECT * from live_record_log where (title like '%test%' or keyword like '%test%') and video_address is not null and create_time < '2016-12-04 11:44:26'",{row ->
+           ///dataBases.msqlLive.eachRow("SELECT * from live_record_log where (title like '%test%' or keyword like '%test%') and video_address is not null and create_time < '2016-12-04 11:44:26'",{row ->
                 resultList << [
                     video_address: row.video_address
                 ]
@@ -965,7 +965,7 @@ class LiveResImpl implements LiveRes {
             }
             sb.append(" ORDER BY sort_num DESC,begin_time ASC limit 1")
             log.info("getMyLiveNotice,sql:{},params:{}",sb.toString(),params)
-            res = dataBases.msqlLiveSlave.firstRow(sb.toString(), params)
+            res = dataBases.msqlLive.firstRow(sb.toString(), params)
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1240,7 +1240,7 @@ class LiveResImpl implements LiveRes {
             def sqlMap = getResultSql(map)
             log.info("findForeshowList SQL >> "+sqlMap.sql)
             log.info("findForeshowList PARAMS >> "+sqlMap.params)
-            resultList = dataBases.msqlLiveSlave.rows(sqlMap.sql.toString(),sqlMap.params)
+            resultList = dataBases.msqlLive.rows(sqlMap.sql.toString(),sqlMap.params)
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1271,7 +1271,7 @@ class LiveResImpl implements LiveRes {
         sb.append(" ORDER BY sort_num ASC,create_time DESC")
 
 
-        resultList= dataBases.msqlLiveSlave.rows(sb.toString(),params)
+        resultList= dataBases.msqlLive.rows(sb.toString(),params)
         return resultList
     }
 
@@ -1281,7 +1281,7 @@ class LiveResImpl implements LiveRes {
         int res = 0
         try {
             //先查询是否存在
-            def result = dataBases.msqlLiveSlave.firstRow(querySql, queryParam);
+            def result = dataBases.msqlLive.firstRow(querySql, queryParam);
             //插入记录
             if(!result){
                 String insertSql = 'INSERT INTO live_user_foreshow (`user_id`, `foreshow_id`, `create_time`, `app_id`) VALUES (?,?,?,?)';
@@ -1347,7 +1347,7 @@ class LiveResImpl implements LiveRes {
         sql.append(" ORDER BY f.sort_num DESC, f.create_time DESC LIMIT ?")
         params << psize
 
-        dataBases.msqlLiveSlave.eachRow(sql.toString(),params,{
+        dataBases.msqlLive.eachRow(sql.toString(),params,{
             resultList << [
                 liveThumb:it.img_url,
                 foreshowId:it.foreshow_id,
@@ -1366,7 +1366,7 @@ class LiveResImpl implements LiveRes {
         String sql = "SELECT * FROM live_user_foreshow uf WHERE 1=1 AND uf.user_id = ? AND uf.foreshow_id=? and uf.app_id=? AND uf.end_time IS NULL "
         List params = [userId,foreshowId,appId]
 
-        def result =dataBases.msqlLiveSlave.firstRow(sql,params)
+        def result =dataBases.msqlLive.firstRow(sql,params)
         return result
     }
 
@@ -1405,7 +1405,7 @@ class LiveResImpl implements LiveRes {
         if(VerUtils.toIntVer(vc) < VerUtils.toIntVer("5.6")) {//小于5.6版本不显示付费直播
             sql = "select * from live_foreshow where parent_id = ${parentId} and foreshow_status = ${foreshowStatus} and foreshow_type!=3 and not_show_in_client!= 1 order by child_sort DESC,begin_time desc"
         }
-        dataBases.msqlLiveSlave.firstRow(sql)
+        dataBases.msqlLive.firstRow(sql)
     }
 
     @Override
@@ -1420,7 +1420,7 @@ class LiveResImpl implements LiveRes {
     def findVestCommentList(String appId) {
         def resultList = []
         try {
-            dataBases.msqlLiveSlave.eachRow("SELECT * from live_marked_words where app_id = ? AND type = 1 AND is_del = 1",[appId]){row ->
+            dataBases.msqlLive.eachRow("SELECT * from live_marked_words where app_id = ? AND type = 1 AND is_del = 1",[appId]){row ->
                 resultList << (row.content ?: "")as String
             }
         }catch (Exception e){
@@ -1444,7 +1444,7 @@ class LiveResImpl implements LiveRes {
     def findStopedPgcList() {
         def resultList = []
         try {
-            dataBases.msqlLiveSlave.eachRow("SELECT * from live_record_log where live_mode != 1 AND live_status != 4"){row ->
+            dataBases.msqlLive.eachRow("SELECT * from live_record_log where live_mode != 1 AND live_status != 4"){row ->
                 resultList << [
                         liveId: row.live_id as long,
                         foreshowId: row.foreshow_id as long,
@@ -1467,7 +1467,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def getNotBeginLiveRecordsByTime(){
         def resultList=[]
-        dataBases.msqlLiveSlave.eachRow("SELECT * from live_record where pgc_status=0 and begin_time<?",[new Date()]){
+        dataBases.msqlLive.eachRow("SELECT * from live_record where pgc_status=0 and begin_time<?",[new Date()]){
             resultList<<[liveId:it.live_id,foreshowId:it.foreshow_id,appId:it.app_id]
         }
         return resultList
@@ -1475,7 +1475,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def findNotBeginForeshowListByTime(){
         def resultList=[]
-        dataBases.msqlLiveSlave.eachRow("select * from live_foreshow where foreshow_status=? and begin_time<?",
+        dataBases.msqlLive.eachRow("select * from live_foreshow where foreshow_status=? and begin_time<?",
             [LiveCommon.FORESHOW_STATUS_0,new Date()])
             {
             def foreshowBean=toForeshowBean(it)
@@ -1530,7 +1530,7 @@ class LiveResImpl implements LiveRes {
 
     @Override
     def findLiveRecordLogByFileId(String fileId) {
-        return dataBases.msqlLiveSlave.firstRow("SELECT * FROM live_record_log WHERE video_address LIKE ?", ["%"+fileId+"%"])
+        return dataBases.msqlLive.firstRow("SELECT * FROM live_record_log WHERE video_address LIKE ?", ["%"+fileId+"%"])
     }
 
     @Override
@@ -1539,7 +1539,7 @@ class LiveResImpl implements LiveRes {
         try{
             Date updateTime = DateUtil.getRollDay(new Date(),-1)
             String sql ="SELECT * FROM live_foreshow WHERE foreshow_status = 2 and update_time >? ORDER BY begin_time desc"
-            resultList = dataBases.msqlLiveSlave.rows(sql,[updateTime])
+            resultList = dataBases.msqlLive.rows(sql,[updateTime])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1553,7 +1553,7 @@ class LiveResImpl implements LiveRes {
             StringBuilder sb = new StringBuilder("SELECT * FROM live_foreshow WHERE foreshow_status = 2 and foreshow_type != 5 and update_time> ? and update_time < ? ORDER BY foreshow_id asc")
             Date gtDate = DateUtil.addDateByDay(new Date(),-1)
             Date ltDate = DateUtil.addDateByMinute(new Date(),-20)
-            resultList = dataBases.msqlLiveSlave.rows(sb.toString(),[gtDate,ltDate])
+            resultList = dataBases.msqlLive.rows(sb.toString(),[gtDate,ltDate])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1569,7 +1569,7 @@ class LiveResImpl implements LiveRes {
         try{
             StringBuilder sb = new StringBuilder("SELECT * FROM live_banner WHERE app_id = ? and begin_time <= ? and end_time > ? ORDER BY sort_num DESC,begin_time DESC limit 10")
             Date date = new Date()
-            resultList = dataBases.msqlLiveSlave.rows(sb.toString(),[appId,date,date])
+            resultList = dataBases.msqlLive.rows(sb.toString(),[appId,date,date])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1582,26 +1582,26 @@ class LiveResImpl implements LiveRes {
      * @return
      */
     def getForeshowById(long foreshowId){
-        dataBases.msqlLiveSlave.firstRow("SELECT *,(select count(1) from live_foreshow a where a.parent_id=b.foreshow_id and a.foreshow_status=2) as live_num FROM live_foreshow b WHERE foreshow_id = ?",[foreshowId])
+        dataBases.msqlLive.firstRow("SELECT *,(select count(1) from live_foreshow a where a.parent_id=b.foreshow_id and a.foreshow_status=2) as live_num FROM live_foreshow b WHERE foreshow_id = ?",[foreshowId])
     }
 
     @Override
     def findTestLiveRecordList() {
         Date date = DateUtil.getRollDay(new Date(), -3)
-        return dataBases.msqlLiveSlave.rows("SELECT * from live_record_log where  live_status !=4 AND create_time <? ORDER  BY create_time desc",[date])
+        return dataBases.msqlLive.rows("SELECT * from live_record_log where  live_status !=4 AND create_time <? ORDER  BY create_time desc",[date])
     }
 
     @Override
     def findZstestLiveRecordList() {
         Date date = DateUtil.getRollDay(new Date(), -3)
-        return dataBases.msqlLiveSlave.rows("SELECT * from live_record_log where  live_status=2 or (live_status !=4 AND title like '%zstest%') AND live_mode=1 AND create_time <? ORDER  BY create_time desc",[date])
-//        return dataBases.msqlLiveSlave.rows("SELECT * from live_record_log where live_status in (2,4) ")
+        return dataBases.msqlLive.rows("SELECT * from live_record_log where  live_status=2 or (live_status !=4 AND title like '%zstest%') AND live_mode=1 AND create_time <? ORDER  BY create_time desc",[date])
+//        return dataBases.msqlLive.rows("SELECT * from live_record_log where live_status in (2,4) ")
     }
 
     @Override
     def findLiveRecordListForUpdateCountRedis() {
-        def liveList = dataBases.msqlLiveSlave.rows("SELECT live_id FROM live_record ")
-        def liveRecordList = dataBases.msqlLiveSlave.rows("SELECT live_id FROM live_record_log WHERE live_mode !=1 AND live_status != 4 ORDER BY create_time DESC ")
+        def liveList = dataBases.msqlLive.rows("SELECT live_id FROM live_record ")
+        def liveRecordList = dataBases.msqlLive.rows("SELECT live_id FROM live_record_log WHERE live_mode !=1 AND live_status != 4 ORDER BY create_time DESC ")
         if(liveList && liveRecordList){
             liveList.addAll(liveRecordList)
             return liveList
@@ -1613,7 +1613,7 @@ class LiveResImpl implements LiveRes {
 
     @Override
     def findDataListBySql(String sql) {
-        return dataBases.msqlLiveSlave.rows(sql)
+        return dataBases.msqlLive.rows(sql)
     }
 
     @Override
@@ -1623,7 +1623,7 @@ class LiveResImpl implements LiveRes {
             sql.append(" AND r.is_private = 0")
         }
         sql.append(" ORDER BY r.begin_time")
-        return dataBases.msqlLiveSlave.firstRow(sql.toString(),[appId , userId])
+        return dataBases.msqlLive.firstRow(sql.toString(),[appId , userId])
     }
 
     @Override
@@ -1657,7 +1657,7 @@ class LiveResImpl implements LiveRes {
         def resultList = []
         def id = Strings.toListString(ids)
         StringBuilder sb = new StringBuilder("SELECT * FROM live_foreshow WHERE foreshow_id in (${id})")
-        dataBases.msqlLiveSlave.rows(sb.toString()).each {
+        dataBases.msqlLive.rows(sb.toString()).each {
             resultList << [
                 foreshow_id:it.foreshow_id,
                 title:it.title,
@@ -1693,7 +1693,7 @@ class LiveResImpl implements LiveRes {
         sb.append(" UNION")
         //使用共享的app
         sb.append(" SELECT c.app_id FROM live_foreshow f INNER JOIN live_category_info c ON f.cate_id = c.share_cat_id AND f.foreshow_id = ${params.foreshowId}")
-        def result = dataBases.msqlLiveSlave.rows(sb.toString())
+        def result = dataBases.msqlLive.rows(sb.toString())
         log.info("getAppIdsByForeshow params=>{},result=>{}",params,result)
         return result
     }
@@ -1701,7 +1701,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def getAppIdsFromConfig(){
         StringBuilder sb = new StringBuilder("SELECT app_id FROM live_app_config ")
-        def result = dataBases.msqlLiveSlave.rows(sb.toString())
+        def result = dataBases.msqlLive.rows(sb.toString())
         return result
     }
 
@@ -1742,7 +1742,7 @@ class LiveResImpl implements LiveRes {
         sql.append(" ORDER BY begin_time DESC LIMIT ?")
         paramsList.add(map.psize as int)
         log.info("searchLiveListByKeyword,sql:{},params:{}",sql.toString(),paramsList)
-        return dataBases.msqlLiveSlave.rows(sql.toString(),paramsList)
+        return dataBases.msqlLive.rows(sql.toString(),paramsList)
     }
 
     @Override
@@ -1757,12 +1757,12 @@ class LiveResImpl implements LiveRes {
 
     @Override
     def getAllForeshowList() {
-        return dataBases.msqlLiveSlave.rows("SELECT foreshow_id,create_time,update_time,live_record_info FROM live_foreshow WHERE live_record_info LIKE ? ORDER BY create_time DESC",["%video_address%"])
+        return dataBases.msqlLive.rows("SELECT foreshow_id,create_time,update_time,live_record_info FROM live_foreshow WHERE live_record_info LIKE ? ORDER BY create_time DESC",["%video_address%"])
     }
 
     @Override
     def findCollectLiveByuserIdAndForeshowId(long userId, long foreshowId,String appId) {
-        return dataBases.msqlLiveSlave.firstRow("SELECT * FROM live_collection WHERE foreshow_id=? AND user_id=? AND app_id = ?",[foreshowId, userId,appId])
+        return dataBases.msqlLive.firstRow("SELECT * FROM live_collection WHERE foreshow_id=? AND user_id=? AND app_id = ?",[foreshowId, userId,appId])
     }
 
     @Override
@@ -1789,7 +1789,7 @@ class LiveResImpl implements LiveRes {
         }
         sql.append("ORDER BY create_time DESC LIMIT ?")
         paramsMap.add(map.psize as int)
-        return dataBases.msqlLiveSlave.rows(sql.toString(), paramsMap)
+        return dataBases.msqlLive.rows(sql.toString(), paramsMap)
     }
 
     @Override
@@ -1876,7 +1876,7 @@ class LiveResImpl implements LiveRes {
     @Override
     def getForeshowNumberForSrpId(String srpId){
         StringBuilder sql = new StringBuilder("select count(*) as count from live_foreshow r where r.srp_id = ? and r.foreshow_status != 3 and r.foreshow_status != 4 ")
-        def row= dataBases.msqlLiveSlave.firstRow(sql.toString(),[srpId])
+        def row= dataBases.msqlLive.firstRow(sql.toString(),[srpId])
         return row && row.count ? row.count as int : 0
     }
 
@@ -1888,7 +1888,7 @@ class LiveResImpl implements LiveRes {
             sql.append(" and type=?")
             paramsMap << type
         }
-        def result = dataBases.msqlLiveSlave.rows(sql.toString(), paramsMap)
+        def result = dataBases.msqlLive.rows(sql.toString(), paramsMap)
         def listId = []
         result.each {
             listId << it.extend_id
@@ -1904,7 +1904,7 @@ class LiveResImpl implements LiveRes {
             sql.append("or (live_type=0 and create_time >? and create_time < ?) limit 50")
             Date gtDate = DateUtil.addDateByMinute(new Date(),-2)
             Date ltDate = new Date()
-            resultList = dataBases.msqlLiveSlave.rows(sql.toString(),[gtDate,ltDate,gtDate,ltDate])
+            resultList = dataBases.msqlLive.rows(sql.toString(),[gtDate,ltDate,gtDate,ltDate])
         }catch (Exception e){
             e.printStackTrace()
         }
@@ -1916,7 +1916,7 @@ class LiveResImpl implements LiveRes {
         def resultList = []
         try{
             StringBuilder sql = new StringBuilder("select * from live_union_account where status=1 limit 50")
-            resultList = dataBases.msqlLiveSlave.rows(sql.toString())
+            resultList = dataBases.msqlLive.rows(sql.toString())
         }catch (Exception e){
             e.printStackTrace()
         }
