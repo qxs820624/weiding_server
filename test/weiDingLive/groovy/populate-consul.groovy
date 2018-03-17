@@ -64,7 +64,7 @@ Consul.put(null, 'configuration/weiDing', [
     'live.kestrel.name.blog':'live_blog',
     'live.defalut.srpid':'f479751542203f3e5f4d300ddacd1127',
     'live.defalut.keyword':'heyl公开圈',
-    'url.count.limit.memcached.servers':'202.108.1.109:11212',
+    'url.count.limit.memcached.servers':'47.92.80.247:11212',
     'live.test.user.list':'105,214,45874,42519,41594,42492',
     'max.vest.count':'2000',
 
