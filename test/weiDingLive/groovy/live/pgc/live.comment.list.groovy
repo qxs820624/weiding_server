@@ -14,9 +14,9 @@ ApiUtils.processNoEncry({
     int  psize = (params.psize ?: 10) as int
     params.psize = psize + 1
     params.lastId = (params.lastId ?: 0) as long
-
-    QcloudLiveService cloudLiveService = bean(QcloudLiveService)
-    List commentList = cloudLiveService.findLiveCommentList(params as Map)
+    List commentList =[]
+//    QcloudLiveService cloudLiveService = bean(QcloudLiveService)
+//    commentList = cloudLiveService.findLiveCommentList(params as Map)
     boolean hasMore = false
     if(commentList && commentList.size() > psize){
         hasMore = true

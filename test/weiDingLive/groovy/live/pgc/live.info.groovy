@@ -145,12 +145,13 @@ ApiUtils.process {
         if(liveRecord.liveMode == LiveCommon.LIVE_MODE_3){
             //如果是付费直播，则要返回观看权限，商品url，邀请卡url，票价
             def userInfo = liveService.getUserInfo(userId)
-            def liveRecordPay = qcloudLiveService.findLiveRecordPayInfo(liveRecord.liveId,userInfo,liveRecord,inviter)
+            def liveRecordPay = [:]//qcloudLiveService.findLiveRecordPayInfo(liveRecord.liveId,userInfo,liveRecord,inviter)
             result.record << [
                 price: liveRecordPay?.ticketPrice?Strings.getDivideNum(liveRecordPay.ticketPrice,"100"):0,
                 sybPrice:liveRecordPay?.ticketPrice?:0,
                 invitCardUrl:qcloudLiveService.inviteUrl+"?userid="+userId+"&foreshowId=+"+foreshowId+"&liveId="+liveRecord.liveId+"&appId="+appId,//生成当前邀请卡的appId，即请求当前接口的appId
-                viewAuthority: liveRecordPay?.viewAuthority ?: 0,
+//                viewAuthority: liveRecordPay?.viewAuthority ?: 0,
+                viewAuthority: 1,
                 appAccount: liveRecordPay?.mpAccount,
                 tryTime:liveRecordPay?.tryTime?:0,
             ]
@@ -230,12 +231,12 @@ ApiUtils.process {
         if(liveRecordLog.liveMode == LiveCommon.LIVE_MODE_3){
             //如果是付费直播，则要返回观看权限，商品url，邀请卡url，票价
             def userInfo = liveService.getUserInfo(userId)
-            def liveRecordPay = qcloudLiveService.findLiveRecordPayInfo(liveRecordLog.liveId,userInfo,liveRecordLog,inviter)
+            def liveRecordPay = [:]//qcloudLiveService.findLiveRecordPayInfo(liveRecordLog.liveId,userInfo,liveRecordLog,inviter)
             result.record << [
                 price: liveRecordPay?.ticketPrice?Strings.getDivideNum(liveRecordPay.ticketPrice,"100"):0,
                 sybPrice:liveRecordPay?.ticketPrice?:0,
                 invitCardUrl:qcloudLiveService.inviteUrl+"?userid="+userId+"&foreshowId=+"+foreshowId+"&liveId="+liveRecordLog.liveId+"&appId="+appId,//生成当前邀请卡的appId，即请求当前接口的appId
-                viewAuthority: liveRecordPay?.viewAuthority ?: 0,
+                viewAuthority: 1,//liveRecordPay?.viewAuthority ?: 0,
                 appAccount: liveRecordPay?.mpAccount,
                 tryTime:liveRecordPay?.tryTime?:0,
             ]
