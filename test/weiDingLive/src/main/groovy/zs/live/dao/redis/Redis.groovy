@@ -76,6 +76,7 @@ public class Redis {
                     }
                 }
             }
+            jedis.auth("live123")
             val = closure?.call(jedis)
         } catch (ignored) {
             liveRedisLog.error("redis $ipPort", ignored)
