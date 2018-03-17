@@ -750,14 +750,20 @@ class LiveServiceImpl implements LiveService {
                 userInfo.userId = userId
                 userInfo.signature = "";
             }else{
-                String res = Http.post(userInfoUrl,["userId":userId])
-                def resJson = Strings.parseJson(res)
-                userInfo.userName = resJson?.body.userName ?: "";
-                userInfo.nickname = resJson?.body.nickName ?: "游客";
-                userInfo.userImage = ImageUtils.getSmallImg(resJson?.body.imageUrl ?: "");
+//                String res = Http.get(userInfoUrl+"?userid="+userId)
+//                def resJson = Strings.parseJson(res)
+//                userInfo.userName = resJson?.body.userName ?: "";
+//                userInfo.nickname = resJson?.body.nickname ?: "游客";
+//                userInfo.userImage = ImageUtils.getSmallImg(resJson?.body.imageUrl ?: "");
+//                userInfo.userId = userId
+//                userInfo.signature = resJson?.body.signature ?: "";
+//                userInfo.mobile = resJson?.body.mobile ?: ""
+                userInfo.userName = "weiding1111";
+                userInfo.nickname = "weiding1111";
+                userInfo.userImage = "http://usc.zhongsou.com/images/public/HeadImg/default_42.jpg";
                 userInfo.userId = userId
-                userInfo.signature = resJson?.body.signature ?: "";
-                userInfo.mobile = resJson?.body.mobile ?: ""
+                userInfo.signature = "";
+                userInfo.mobile = ""
             }
         }catch (Exception e){}
         return userInfo
