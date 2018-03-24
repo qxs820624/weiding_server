@@ -68,7 +68,8 @@ class LiveServiceImpl implements LiveService {
     String liveGetAppNameUrl
     @Value('${live.get.appname.signkey}')
     String liveGetAppNameSignkey
-
+    @Value('${weiding.host.url}')
+    String weidingUrl
     @Autowired
     LiveRes liveRes;
     @Autowired
@@ -750,7 +751,7 @@ class LiveServiceImpl implements LiveService {
 //                userInfo.userId = userId
 //                userInfo.signature = "";
 //            }else{
-                String res = Http.post(userInfoUrl,[userid: userId])
+                String res = Http.post(weidingUrl+"/userInfo",[userid: userId])
                 log.info("getUserInfo res:{}", res)
                 def resJson = Strings.parseJson(res)
                 if(resJson?.code == "200"){
