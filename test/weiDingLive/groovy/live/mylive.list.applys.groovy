@@ -38,4 +38,5 @@ process({
         title     : "我购买的付费直播",
         url       : new URL(base, "live/pgc/user.foreshow.list.groovy?isEncryption=1&hasPubParam=1")
     ]
-})
+    return [mylist:list]
+}, [clientCacheMinute: 30])
