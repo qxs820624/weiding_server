@@ -3320,7 +3320,7 @@ class LiveServiceImpl implements LiveService {
             map.recordSn = resJson.data?.record_sn
             map.tradeType = resJson.data?.trade_type
             liveRes.addPayOrder(map)
-            return resJson?.data?.prepay_id
+            return [prepay_id: resJson?.data?.prepay_id]
         }else {
             throw new ApiException(700,"支付失败！")
         }
