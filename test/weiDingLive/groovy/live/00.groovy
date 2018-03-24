@@ -20,6 +20,6 @@ import zs.live.utils.Strings
 
 ApiUtils.processNoEncry(){
     LiveService liveService = bean(LiveService)
-    return liveService.getUserInfo(1111)
+    return liveService.getUserInfo(1)
 
 }
