@@ -1923,5 +1923,13 @@ class LiveResImpl implements LiveRes {
         return resultList
     }
 
+    @Override
+    def addPayOrder(Map map) {
+        String sql = "insert into live_pay_order(order_id,pay_type,order_type,order_status,amount,live_id,from_uid,to_uid,record_sn,trade_type) " +
+            "values(?,?,?,0,?,?,?,0,?,?)"
+        List params = [map.orderId,(map.payType?: 0) as int, (map.orderType?: 3) as int, map.amount as double, map.liveId as long, map.userId as long,map.recordSn,map.tradeType]
+        dataBases.msqlLive.executeInsert(sql,params)
 
+        return null
+    }
 }

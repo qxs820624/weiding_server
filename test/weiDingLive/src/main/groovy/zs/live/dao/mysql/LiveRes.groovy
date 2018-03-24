@@ -669,7 +669,13 @@ interface LiveRes {
      */
     List findNoticeMobie()
 
- 
+    /**
+     * 生成购买直播的订单
+     * @param map
+     * @return
+     */
+    def addPayOrder(Map map)
+
 }
 
 

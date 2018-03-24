@@ -690,4 +690,7 @@ public class Strings {
         }
         return res
     }
+    public static String getOrderId(long liveId, long userId){
+        return System.currentTimeMillis()+liveId+userId
+    }
 }

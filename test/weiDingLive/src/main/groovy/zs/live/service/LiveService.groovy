@@ -674,4 +674,5 @@ interface LiveService {
      * @return
      */
     def getAppName(String appId)
+    def payOrder(Map map)
 }
