@@ -32,18 +32,18 @@ Consul.put(null, 'configuration/weiDing', [
     'db.mysql.live.slave.user':'weiding',
     'db.mysql.live.slave.password':'YSU%$S7js6%A8dks',
 
-    'live.mongo.servers':'202.108.33.162:27017',
+    'live.mongo.servers':'47.92.80.247:27017',
     'live.mongo.db':'live',
     'live.mongo.connectionsPerHost':'40',
     'live.mongo.connectionMultiplier':'100',
 
 
-    'live.import.mongo.servers':'202.108.33.162:27017',
+    'live.import.mongo.servers':'47.92.80.247:27017',
     'live.import.mongo.db':'live',
     'live.import.mongo.connectionsPerHost':'40',
     'live.import.mongo.connectionMultiplier':'100',
 
-    'user.info.souyue.url':'http://103.29.134.224:8888/d3api2/pc/user/user.redis.info.groovy',
+    'user.info.souyue.url':'http://47.104.10.160:8080/tolive/userInfo',
     'live.heart.task.time':60,
 
     'gift.list.url':'https://sybtest.zhongsou.com/api/giftlist',

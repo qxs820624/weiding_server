@@ -62,6 +62,8 @@ class QcloudLiveServiceImpl implements QcloudLiveService{
     String livePayOrderUrl
     @Value('${live.statistic.nginx.url}')
     String liveNginxLogUrl
+    @Value('${weiding.host.url}')
+    String weidingUrl
 
     @Autowired
     LiveQcloudRedis liveQcloudRedis;
@@ -1179,27 +1181,28 @@ class QcloudLiveServiceImpl implements QcloudLiveService{
             double price = (liveRecordPay?.ticketPrice as double)*100
             if(price.intValue()==0){
                 liveRecordPay.viewAuthority = 1
-                Parallel.run([1],{
-                    Map mapData = [
-                        userName: userInfo.userName,
-                        userId:userInfo.userId,
-                        clientOprateOrder: userInfo.userId+"_"+liveId+"_"+"order",
-                        giftName: liveRecord.title,
-                        giftPrice: 0,
-                        giftNum: 1,
-                        liveId: liveId,
-                        liveTitle: liveRecord.title,
-                        appAccount: liveRecordPay.mpAccount,
-                        sign: ZURL.generateMD5(userInfo.userId+""+liveId+"XSDLAKSIJDUSHNUA@@1!!423"),
-                        inviter: inviter,
-                        appId: liveRecord.appId
-                    ]
-                    Http.post(livePayOrderUrl,mapData)
-                },1)
+//                Parallel.run([1],{
+//                    Map mapData = [
+//                        userName: userInfo.userName,
+//                        userId:userInfo.userId,
+//                        clientOprateOrder: userInfo.userId+"_"+liveId+"_"+"order",
+//                        giftName: liveRecord.title,
+//                        giftPrice: 0,
+//                        giftNum: 1,
+//                        liveId: liveId,
+//                        liveTitle: liveRecord.title,
+//                        appAccount: liveRecordPay.mpAccount,
+//                        sign: ZURL.generateMD5(userInfo.userId+""+liveId+"XSDLAKSIJDUSHNUA@@1!!423"),
+//                        inviter: inviter,
+//                        appId: liveRecord.appId
+//                    ]
+//                    Http.post(livePayOrderUrl,mapData)
+//                },1)
             }else {
-                Map params = [userName:userInfo.userName, liveId: liveId,phone:userInfo.mobile,appId: liveRecord.appId,liveName:liveRecord.title]
-//                Map params = [userName:userInfo.userName, liveId: liveId]
-                def resultStr = Http.post(liveUserPayUrl, params)
+//                Map params = [userName:userInfo.userName, liveId: liveId,phone:userInfo.mobile,appId: liveRecord.appId,liveName:liveRecord.title]
+                //record_sn:交易流水号，out_trade_no：商家订单号
+                Map params = [record_sn:"", out_trade_no: ""]
+                def resultStr = Http.post(weidingUrl+"/payresult", params)
                 def result = Strings.parseJson(resultStr)
                 log.info("wangtf getuserpay liveId:{},userId:{},userName:{},res:{}",liveId,userInfo.userId,userInfo.userName,result)
                 if(result &&  "200".equals(result?.head?.code as String) ){

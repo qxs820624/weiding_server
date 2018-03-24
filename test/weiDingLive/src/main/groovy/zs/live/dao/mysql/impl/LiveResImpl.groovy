@@ -1537,7 +1537,7 @@ class LiveResImpl implements LiveRes {
     List findForeshowIdListForMerge() {
         def resultList = []
         try{
-            Date updateTime = DateUtil.getRollDay(new Date(),-1)
+            Date updateTime = DateUtil.getRollDay(new liveDate(),-1)
             String sql ="SELECT * FROM live_foreshow WHERE foreshow_status = 2 and update_time >? ORDER BY begin_time desc"
             resultList = dataBases.msqlLive.rows(sql,[updateTime])
         }catch (Exception e){
