@@ -3313,14 +3313,14 @@ class LiveServiceImpl implements LiveService {
         //请求第三方接口获取交易流水号
         Map params = [sysId:"WEIDING-LIVE", record_sn: "",out_trade_no:map.orderId,type:map.orderType,
                       pay_type:map.payType,from_uid:map.userId,to_uid:0,amount:map.amount]
-        def res = Http.post(weidingUrl+"/.payresult", params)
+        def res = Http.post(weidingUrl+"/payresult", params)
         log.info("payOrder res:{}", res)
         def resJson = Strings.parseJson(res)
         if(resJson?.code == "200"){
             map.recordSn = resJson.data?.record_sn
             map.tradeType = resJson.data?.trade_type
             liveRes.addPayOrder(map)
-            return [prepay_id: resJson?.data?.prepay_id]
+            return [prepay_id: resJson?.data?.prepay_id,record_sn:resJson.data?.record_sn]
         }else {
             throw new ApiException(700,"支付失败！")
         }
