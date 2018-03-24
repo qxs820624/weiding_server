@@ -20,6 +20,6 @@ import zs.live.utils.Strings
 
 ApiUtils.processNoEncry(){
     LiveService liveService = bean(LiveService)
-    List list = liveService.scanForeshowDataForMistake()
-    return [count: list.size(),list:list]
+    return liveService.getUserInfo(1111)
+
 }
