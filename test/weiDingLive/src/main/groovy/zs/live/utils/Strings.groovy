@@ -23,7 +23,7 @@ import java.util.regex.Pattern
 @Slf4j
 public class Strings {
 
-    public static final String APP_NAME_SOUYUE = "souyue"//搜悦，搜悦简版，搜悦精华版的appname
+    public static final String APP_NAME_SOUYUE = "weiding"//搜悦，搜悦简版，搜悦精华版的appname
     public static final String APP_NAME_FIGHT = "com.zhongsou.fightvison"//格斗世界的appname
     public static final String APP_NAME_GIRLU = "com.zhongsou.souyueu" //女U
 
@@ -543,7 +543,7 @@ public class Strings {
      * @return
      */
     public static String getAppId(def params) {
-        String reStr = "souyue"
+        String reStr = "weiding"
         if (params instanceof Map) {
             reStr = params.pfAppName
             if (!reStr) {
