@@ -743,28 +743,28 @@ class LiveServiceImpl implements LiveService {
     Map getUserInfo(Long userId){
         Map userInfo = [:]
         try {
-            if(userId > 1000000000 ){
-                userInfo.userName = "游客";
-                userInfo.nickname = "游客";
-                userInfo.userImage = "";
-                userInfo.userId = userId
-                userInfo.signature = "";
-            }else{
-//                String res = Http.get(userInfoUrl+"?userid="+userId)
-//                def resJson = Strings.parseJson(res)
+//            if(userId > 1000000000 ){
+//                userInfo.userName = "游客";
+//                userInfo.nickname = "游客";
+//                userInfo.userImage = "";
+//                userInfo.userId = userId
+//                userInfo.signature = "";
+//            }else{
+                String res = Http.post(userInfoUrl,[userid: userId])
+                log.info("getUserInfo res:{}", res)
+                def resJson = Strings.parseJson(res)
+                if(resJson?.code == "200"){
+                    userInfo.userId=resJson.userId
+                    userInfo.userImage = resJson.imageUrl
+                    userInfo.nickname = resJson.nickname
+                }
 //                userInfo.userName = resJson?.body.userName ?: "";
 //                userInfo.nickname = resJson?.body.nickname ?: "游客";
 //                userInfo.userImage = ImageUtils.getSmallImg(resJson?.body.imageUrl ?: "");
 //                userInfo.userId = userId
 //                userInfo.signature = resJson?.body.signature ?: "";
 //                userInfo.mobile = resJson?.body.mobile ?: ""
-                userInfo.userName = "weiding1111";
-                userInfo.nickname = "weiding1111";
-                userInfo.userImage = "http://usc.zhongsou.com/images/public/HeadImg/default_42.jpg";
-                userInfo.userId = userId
-                userInfo.signature = "";
-                userInfo.mobile = ""
-            }
+//            }
         }catch (Exception e){}
         return userInfo
     }
@@ -2223,7 +2223,6 @@ class LiveServiceImpl implements LiveService {
                     break;
             }
         }
-
         if (viewType == LiveCommon.VIEW_TYPE_LIVE || viewType == LiveCommon.VIEW_TYPE_PGC_FORESHOW_START_AND_PAUSE){//互动直播中、会议直播中、会议直播暂停只需要人数
             def liveMode
             def roomId
@@ -2342,7 +2341,12 @@ class LiveServiceImpl implements LiveService {
                 category = "收费会议直播预告"
             }
         }
-
+        //付费直播需要返回直播价格
+        double price = 0.00
+        if(foreshowType == 3){
+            def liveRecordPay = qcloudLiveRes.findLiveRecordPayExtendByLiveId(liveId)
+            price = (liveRecordPay?.ticketPrice as double)*100
+        }
         return [
             chargeType: it.foreshow_type==3 ? 1 : 2,//1:收费，2:不收费
             invokeType: invokeType,
@@ -2378,7 +2382,8 @@ class LiveServiceImpl implements LiveService {
             "keyword": it.keyword,
             "srpId": it.srp_id,
             "blogId": blogId,
-            liveId: liveId
+            liveId: liveId,
+            price: price
         ]
     }
 
