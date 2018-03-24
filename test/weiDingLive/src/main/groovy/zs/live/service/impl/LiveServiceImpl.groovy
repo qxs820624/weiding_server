@@ -744,28 +744,14 @@ class LiveServiceImpl implements LiveService {
     Map getUserInfo(Long userId){
         Map userInfo = [:]
         try {
-//            if(userId > 1000000000 ){
-//                userInfo.userName = "游客";
-//                userInfo.nickname = "游客";
-//                userInfo.userImage = "";
-//                userInfo.userId = userId
-//                userInfo.signature = "";
-//            }else{
-                String res = Http.post(weidingUrl+"/userInfo",[userid: userId])
-                log.info("getUserInfo res:{}", res)
-                def resJson = Strings.parseJson(res)
-                if(resJson?.code == "200"){
-                    userInfo.userId=resJson.userId
-                    userInfo.userImage = resJson.imageUrl
-                    userInfo.nickname = resJson.nickname
-                }
-//                userInfo.userName = resJson?.body.userName ?: "";
-//                userInfo.nickname = resJson?.body.nickname ?: "游客";
-//                userInfo.userImage = ImageUtils.getSmallImg(resJson?.body.imageUrl ?: "");
-//                userInfo.userId = userId
-//                userInfo.signature = resJson?.body.signature ?: "";
-//                userInfo.mobile = resJson?.body.mobile ?: ""
-//            }
+            String res = Http.post(weidingUrl+"/userInfo",[userid: userId])
+            log.info("getUserInfo res:{}", res)
+            def resJson = Strings.parseJson(res)
+            if(resJson?.code == "200"){
+                userInfo.userId=resJson.data?.userId
+                userInfo.userImage = resJson.data?.imageUrl
+                userInfo.nickname = resJson.data?.nickname
+            }
         }catch (Exception e){}
         return userInfo
     }
