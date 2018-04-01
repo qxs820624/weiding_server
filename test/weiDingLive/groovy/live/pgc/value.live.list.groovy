@@ -46,45 +46,45 @@ ApiUtils.processNoEncry() {
         isAndroidOs:isAndroidOs
     ]
     def hasMore = true
-    Map configSetInfo = qcloudLiveService.getAppConfigSetInfo(appId)
-    int liveClassify = (configSetInfo.liveClassify ?:0) as int
-    int classifyChannel = (configSetInfo.classifyChannel ?:0) as int
-    int styleCategory = (configSetInfo.styleCategory ?:0) as int
-    int slideshowStatus = (configSetInfo.slideshowStatus ?:0) as int
-    if(configSetInfo.size()>0 && VerUtils.toIntVer(params.vc ) > VerUtils.toIntVer("5.7.0") ){
-        if(!liveClassify){  //分类是否关闭
-            liveCategroyList = []
-        }else {
-            liveCategroyList.get(0).category =  URLDecoder.decode(configSetInfo.recommendTitle, "utf-8")
-        }
-        if(classifyChannel && styleCategory && !categoryId){
-            //查询推荐的数据
-            Map liveMap = [:]
-            liveMap = liveService.getRecommendLiveList(map)
-            if(liveMap.faceList?.size()*2<psize){
-                hasMore = false
-            }
-            liveList.addAll(liveMap?.resultList)
-            liveList.addAll(liveMap?.faceList)
-        }else {
-            if(classifyChannel && !categoryId){
-                map.isRecommend = 1
-            }
-            liveList = liveService.getValueLiveList(map)
-            if (liveList.size()<psize){
-                hasMore = false
-            }
-        }
-        if(slideshowStatus){  //轮播图是否关闭
-            rollImgList = liveService.getRollImgList(map)
-        }
-    }else {
+//    Map configSetInfo = qcloudLiveService.getAppConfigSetInfo(appId)
+//    int liveClassify = (configSetInfo.liveClassify ?:0) as int
+//    int classifyChannel = (configSetInfo.classifyChannel ?:0) as int
+//    int styleCategory = (configSetInfo.styleCategory ?:0) as int
+//    int slideshowStatus = (configSetInfo.slideshowStatus ?:0) as int
+//    if(configSetInfo.size()>0 && VerUtils.toIntVer(params.vc ) > VerUtils.toIntVer("5.7.0") ){
+//        if(!liveClassify){  //分类是否关闭
+//            liveCategroyList = []
+//        }else {
+//            liveCategroyList.get(0).category =  URLDecoder.decode(configSetInfo.recommendTitle, "utf-8")
+//        }
+//        if(classifyChannel && styleCategory && !categoryId){
+//            //查询推荐的数据
+//            Map liveMap = [:]
+//            liveMap = liveService.getRecommendLiveList(map)
+//            if(liveMap.faceList?.size()*2<psize){
+//                hasMore = false
+//            }
+//            liveList.addAll(liveMap?.resultList)
+//            liveList.addAll(liveMap?.faceList)
+//        }else {
+//            if(classifyChannel && !categoryId){
+//                map.isRecommend = 1
+//            }
+//            liveList = liveService.getValueLiveList(map)
+//            if (liveList.size()<psize){
+//                hasMore = false
+//            }
+//        }
+//        if(slideshowStatus){  //轮播图是否关闭
+//            rollImgList = liveService.getRollImgList(map)
+//        }
+//    }else {
         liveList = liveService.getValueLiveList(map)
         if (liveList.size()<psize){
             hasMore = false
         }
         rollImgList = liveService.getRollImgList(map)
-    }
+//    }
     long end3 = System.currentTimeMillis()
     binding.setVariable('head', [hasMore: hasMore])
     def foreshowList = liveService.findNotStartedLiveForeshowList(map);

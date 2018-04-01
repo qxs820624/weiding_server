@@ -2138,6 +2138,7 @@ class LiveServiceImpl implements LiveService {
         String shortUrl
         def category
         def blogId = 0
+        int viewAuthority = 0
 
         if(isHost == 0){
             isOpenRemind = liveRes.isOpenRemind(map.appId, map.userId as long, it.foreshow_id)
@@ -2370,7 +2371,8 @@ class LiveServiceImpl implements LiveService {
             "srpId": it.srp_id,
             "blogId": blogId,
             liveId: liveId,
-            price: price
+            price: price,
+            viewAuthority: viewAuthority
         ]
     }
 

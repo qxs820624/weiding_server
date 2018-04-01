@@ -676,6 +676,12 @@ interface LiveRes {
      */
     def addPayOrder(Map map)
 
+    /**
+     * 获取直播支付结果
+     * @param map
+     * @return
+     */
+    def getLivePayOrderInfo(Map map)
 }
 
 
