@@ -31,7 +31,7 @@ class ControlCenterTaskManager120 {
 
     @PostConstruct
     public void start() {
-       def execList= ["103.29.134.224","103.29.134.187"] //要执行的服务器IP
+       def execList= ["47.92.80.247","103.29.134.187"] //要执行的服务器IP
         if(execList.contains(webIp)){
             log.info("******启动定时任务总控制224,120管理******")
             /**
@@ -53,21 +53,6 @@ class ControlCenterTaskManager120 {
             es.execute(new LiveStopTask(context))
             log.info("启动删除视频文件任务")
             es.execute(new DeleteVideoFileTask(context))
-        }
-        def execVestList= ["103.29.134.224","103.29.134.225","103.29.134.187"] //马甲要执行的服务器IP
-        if(execVestList.contains(webIp)){
-            log.info("启动马甲发评论任务")
-            es.execute(new VestCommentTask(context))
-            log.info("启动马甲点赞任务")
-            es.execute(new VestDoPrimeTask(context))
-            log.info("启动马甲关注任务")
-            es.execute(new VestFansTask(context))
-            log.info("启动马甲打赏礼物任务")
-            es.execute(new VestGiftTask(context))
-            log.info("启动马甲任务")
-            es.execute(new VestMegTask(context))
-            log.info("启动马甲退出房间任务")
-            es.execute(new VestQuitRoomTask(context))
             log.info("启动直播结束列表定时任务")
             es.execute(new VestLiveLogMegTask(context))
 

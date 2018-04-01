@@ -1929,7 +1929,12 @@ class LiveResImpl implements LiveRes {
             "values(?,?,?,0,?,?,?,0,?,?)"
         List params = [map.orderId,(map.payType?: 0) as int, (map.orderType?: 3) as int, map.amount as double, map.liveId as long, map.userId as long,map.recordSn,map.tradeType]
         dataBases.msqlLive.executeInsert(sql,params)
-
         return null
+    }
+
+    @Override
+    def getLivePayOrderInfo(Map map) {
+        String sql = "select * from live_pay_order where live_id=? and from_uid=? order by create_time desc"
+        return dataBases.msqloldLiveSlave.firstRow(sql,[map.liveId as long,map.userId as long])
     }
 }
