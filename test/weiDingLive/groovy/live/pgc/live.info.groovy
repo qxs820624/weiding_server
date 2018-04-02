@@ -85,11 +85,11 @@ ApiUtils.process {
         long end4 = System.currentTimeMillis()
         def shortUrl = ""
         if(liveRecord.liveMode == LiveCommon.LIVE_MODE_3){
-            shortUrl = shortURLService.getShortUrlLivePay([foreshowId:foreshowId, liveId: liveRecord.liveId,userId: userId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlLivePay([foreshowId:foreshowId, liveId: liveRecord.liveId,userId: userId, vc: vc,appId: appId])
         }else if(liveRecord.liveMode == LiveCommon.getLIVE_MODE_2()){
-            shortUrl = shortURLService.getShortUrlPgcForeshow([foreshowId:foreshowId, liveId: liveRecord.liveId,userId: userId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlPgcForeshow([foreshowId:foreshowId, liveId: liveRecord.liveId,userId: userId, vc: vc,appId: appId])
         }else {
-            shortUrl = shortURLService.getShortUrlForeshow([foreshowId:foreshowId,liveMode: liveRecord.liveMode,userId: liveRecord.userId,roomId: liveRecord.roomId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlForeshow([foreshowId:foreshowId,liveMode: liveRecord.liveMode,userId: liveRecord.userId,roomId: liveRecord.roomId, vc: vc,appId: appId])
         }
         //def admireCount = liveService.getLivePraise(liveId) ?: 0
         def watchCount= liveService.getLiveWatherCount(liveRecord.liveId) ?: 0
@@ -187,11 +187,11 @@ ApiUtils.process {
         long end4 = System.currentTimeMillis()
         def shortUrl = ""
         if(liveRecordLog.liveMode == LiveCommon.LIVE_MODE_3){
-            shortUrl = shortURLService.getShortUrlLivePay([foreshowId:foreshowId, liveId: liveRecordLog.liveId,userId: userId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlLivePay([foreshowId:foreshowId, liveId: liveRecordLog.liveId,userId: userId, vc: vc,appId: appId])
         }else if(liveRecordLog.liveMode == LiveCommon.getLIVE_MODE_2()){
-            shortUrl = shortURLService.getShortUrlPgcForeshow([foreshowId:foreshowId, liveId: liveRecordLog.liveId,userId: userId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlPgcForeshow([foreshowId:foreshowId, liveId: liveRecordLog.liveId,userId: userId, vc: vc,appId: appId])
         }else {
-            shortUrl = shortURLService.getShortUrlForeshow([foreshowId: foreshowId,liveMode:liveRecordLog.liveMode, userId: liveRecordLog.userId, vc: vc,appId: appId])
+//            shortUrl = shortURLService.getShortUrlForeshow([foreshowId: foreshowId,liveMode:liveRecordLog.liveMode, userId: liveRecordLog.userId, vc: vc,appId: appId])
         }
         def watchCount= liveService.getLiveWatherTotalCount(liveRecordLog.liveId) ?: 0
 

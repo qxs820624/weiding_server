@@ -2329,11 +2329,13 @@ class LiveServiceImpl implements LiveService {
                 category = "收费会议直播预告"
             }
         }
-        //付费直播需要返回直播价格
+        //付费直播需要返回直播价格,是否支付过
         double price = 0.00
         if(foreshowType == 3){
             def liveRecordPay = qcloudLiveRes.findLiveRecordPayExtendByLiveId(liveId)
             price = (liveRecordPay?.ticketPrice as double)*100
+            def livePayOrder = liveRes.getLivePayOrderInfo([liveId:liveId,userId: map.userId])
+            viewAuthority = (livePayOrder?.status ?: 0) as int == 1 ? 1:0
         }
         return [
             chargeType: it.foreshow_type==3 ? 1 : 2,//1:收费，2:不收费
